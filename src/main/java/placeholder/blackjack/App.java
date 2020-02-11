@@ -1,13 +1,23 @@
 package placeholder.blackjack;
 
 /**
- * Hello world!
+ * Currently being used to test the random placing and shuffling functions of Deck.
  *
  */
 public class App 
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        Deck deck = new Deck();
+        //Card testCard = new Card("SPADES", "TWO");
+        //deck.placeCardRandomly(testCard);
+        deck.shuffleDeck();
+        Card displayCard = null;
+        System.out.println(deck.getDeckSize());
+        for(int i = 0; i < deck.getDeckSize(); i++)
+        {
+            displayCard = deck.getCardAtIndex(i);
+            System.out.println(displayCard.getSuit() + " " + displayCard.getValue() + i);
+        }
     }
 }

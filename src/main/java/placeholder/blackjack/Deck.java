@@ -6,7 +6,7 @@ import java.io.*;
 /**
  * Class to represent a deck of playing cards.
  * @author Cody
- * @version 1.1
+ * @version 1.2
  */
 
 public class Deck
@@ -51,7 +51,7 @@ public class Deck
     }
     
     /**
-     * Returns the top card of the deck.
+     * Removes and returns the top card of the deck.
      * @return The top card of the deck.
      */
     public Card drawCard()
@@ -60,20 +60,37 @@ public class Deck
     }
     
     /**
-     * Returns the card on the bottom of the deck.
-     * @return The card on the bottom of the deck.
+     * Removes and returns the bottom card of the deck.
+     * @return The bottom card of the deck.
      */
     public Card takeCardFromBottom()
     {
         return deck.pollLast();
     }
-    /*public void shuffleDeck()
-     {
-         I think I'll need to store the size (minus one?) into an index and loop through
-         the deck, randoming a number to place the card into (maybe a list or something
-         to store the indexes that already have cards in them?)
-     }
+    
+    /**
+     * Shuffles the deck into a random order.
      */
+    public void shuffleDeck()
+    {
+        Card[] shuffledDeck = new Card[deck.size()];
+        int count = 0;
+        //generate first random number
+        while(!deck.isEmpty())
+        {
+            shuffledDeck[count] = deck.pop();
+            count++;
+        }
+        List<Card> cardList = Arrays.asList(shuffledDeck);
+        
+        Collections.shuffle(cardList);
+        for(int i = 0; i < cardList.size(); i++)
+        {
+            deck.push(cardList.get(i));
+        }
+   }
+     
+    
     /**
      * Places the given card on top of the deck.
      * @param card The card to be placed.
@@ -92,15 +109,33 @@ public class Deck
          deck.add(card);
     }
      
-    
-    /*public void placeCardRandomly(Card card)
-     {
-         placing stuff
-         i think... I'm gonna have to random a number of size (not minus one because
-         i'm upping the end size by one) then looping through the deck and placing the deck
-         into a new deque, checkign to place the required card when I get to the right index.
-     }
+
+    /**
+     * Places the given card in a random point in the deck.
+     * @param card The card to place randomly.
      */
+    public void placeCardRandomly(Card card)
+    {
+        Random random = new Random();
+        int randomSpot = random.nextInt(deck.size() + 1);
+        Deque<Card> newDeck = new ArrayDeque<Card>();
+        int count = 0;
+        int deckSize = deck.size() + 1;
+        while(count < deckSize)
+        {
+            if(count == randomSpot)
+            {
+                newDeck.push(card);
+            }
+            else
+            {
+                newDeck.push(deck.pollLast());
+            }
+            count++;
+        }
+        deck = newDeck;
+    }
+     
     /**
      * Returns the number of cards in the deck as an integer.
      * @return The number of cards in the deck.
@@ -109,5 +144,17 @@ public class Deck
     {
         return deck.size();
     }
-     
+    
+    /**
+     * Returns the card at the given index in the deck.
+     * @param index The index of the card.
+     * @return The card at the given index.
+     */
+    
+    //I... feel like this is kinda hacked together, but it works, so...?
+    public Card getCardAtIndex(int index)
+    {
+        Card[] array = (Card[])deck.toArray(new Card[deck.size()]);
+        return array[index];
+    }
 }

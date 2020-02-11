@@ -61,16 +61,18 @@ public class BlackjackTest
         assertTrue(equals);
     }
     
-    //@Test
-    public void testPlaceCardRandomly()
-    {
-        
-    }
-    
     @Test
     public void testGetNumericValueOfCard()
     {
         int testValue = testCard.parseValue();
         assertEquals(2, testValue);
+    }
+    
+    @Test
+    public void testGetCardAtIndex()
+    {
+        Card equalsCard = new Card("SPADES", "THREE");
+        boolean equals = equalsCard.isEqual(deck.getCardAtIndex(49));
+        assertTrue(equals);
     }
 }
