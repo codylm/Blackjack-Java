@@ -8,7 +8,7 @@ public class App
 {
     public static void main( String[] args )
     {
-        Deck deck = new Deck();
+        /*Deck deck = new Deck();
         //Card testCard = new Card("SPADES", "TWO");
         //deck.placeCardRandomly(testCard);
         deck.shuffleDeck();
@@ -18,6 +18,9 @@ public class App
         {
             displayCard = deck.getCardAtIndex(i);
             System.out.println(displayCard.getSuit() + " " + displayCard.getValue() + i);
-        }
+        }*/
+        
+        Blackjack blackjack = new Blackjack(2);
+        blackjack.runGame();
     }
 }

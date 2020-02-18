@@ -26,10 +26,18 @@ public class Blackjack
      * The number of players.
      */
     private int numOfPlayers;
+    
+    /**
+     * tracks whether the game loop is done.
+     */
+    private boolean gameIsOver = false;
     /**
      * The Deck of cards.
      */
     private Deck deck;
+    
+    //if the shuffling cards into the deck thing doesn't work out, then this offers a nice alternative
+    //private Deck resetDeck;
     
     /**
      * Holds the hands of the players.
@@ -42,7 +50,8 @@ public class Blackjack
     /**
      * Tracks the bets of the players.
      */
-    private int[] bets;
+    //removed to simplify game loop, will add in later
+    //private int[] bets;
     /**
      * Tracks whether the players are open, standing, or busted.
      */
@@ -60,9 +69,13 @@ public class Blackjack
     {
         numOfPlayers = numPlayers;
         deck = new Deck();
-        players = new ArrayList<ArrayList<Card>>(numOfPlayers);
+        players = new ArrayList<ArrayList<Card>>();
+        for(int i = 0; i < numOfPlayers; i++)
+        {
+            players.add(new ArrayList<Card>());
+        }
         softHand = new boolean[numOfPlayers];
-        bets = new int[numOfPlayers];
+        //bets = new int[numOfPlayers];
         playerStatus = new int[numOfPlayers];
         handValue = new int[numOfPlayers];
     }
@@ -72,7 +85,52 @@ public class Blackjack
      */
     public void runGame()
     {
-        
+        while(!gameIsOver)
+        {
+            deck.shuffleDeck();
+            //deal cards
+            for(int i = 0; i < numOfPlayers; i++)
+            {
+                for(int j = 0; j < 2; j++)
+                {
+                    players.get(i).add(deck.drawCard());
+                    System.out.println(players.get(i).get(j).getSuit() + " " + players.get(i).get(j).getValue());
+                    handValue[i] += parseValue(players.get(i).get(j));
+                }
+                currentPlayer++;
+            }
+
+            currentPlayer = 0;
+            //check for dealer blackjack
+            if(handValue[numOfPlayers - 1] == 21)
+            {
+                System.out.println("Dealer has Blackjack, House Wins!");
+                
+                //Return cards to deck, zero out values, and shuffle.
+                for(int i = 0; i < numOfPlayers; i++)
+                {
+                    while(players.get(i).size() > 0)
+                    {
+                        deck.placeCardOnTop(players.get(i).remove(0));
+                    }
+                }
+                for(int i = 0; i < handValue.length; i++)
+                {
+                    handValue[i] = 0;
+                }
+                deck.shuffleDeck();
+                
+                continue;
+            }
+
+            //DEBUG BLOCK
+            for(int i = 0; i < handValue.length; i++)
+            {
+                System.out.println(handValue[i]);
+            }
+            gameIsOver = true;
+            //end debug
+        }
     }
     
     /**
