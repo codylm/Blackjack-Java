@@ -93,14 +93,18 @@ public class Blackjack
             {
                 for(int j = 0; j < 2; j++)
                 {
-                    players.get(i).add(deck.drawCard());
-                    System.out.println(players.get(i).get(j).getSuit() + " " + players.get(i).get(j).getValue());
-                    handValue[i] += parseValue(players.get(i).get(j));
+                    Card card = deck.drawCard();
+                    players.get(i).add(card);
+                    if(card.getValue() == "ACE") softHand[i] = true;
+                    System.out.println(card.getSuit() + " " + card.getValue());
+                    handValue[i] += parseValue(card);
                 }
+                System.out.println(+ handValue[i]);
                 currentPlayer++;
             }
 
             currentPlayer = 0;
+            
             //check for dealer blackjack
             if(handValue[numOfPlayers - 1] == 21)
             {
@@ -122,12 +126,76 @@ public class Blackjack
                 
                 continue;
             }
+            //do-while is necessary for one player vs dealer setup
+            do
+            {
+                //If blackjack, end loop.
+                if(handValue[currentPlayer] == 21)
+                {
+                    System.out.println("Player " + (currentPlayer + 1) + " has Blackjack!");
+                    playerStatus[currentPlayer] = 1;
+                }
+                else
+                {
+                    Scanner move = new Scanner(System.in);
+                    while(playerStatus[currentPlayer] == 0)
+                    {
+                        //Get player input
+                        System.out.print("Please enter HIT or STAND to indicate your move: ");
+                        String input = move.next();
+                        switch(input)
+                        {
+                            case "HIT":
+                                //If hit, draw card, show player card, add card to hand and increase hand value
+                                Card card = deck.drawCard();
+                                if(handValue[currentPlayer] < 11 && card.getValue() == "ACE") softHand[currentPlayer] = true;
+                                System.out.print(card.getSuit() + " " + card.getValue());
+                                players.get(currentPlayer).add(card);
+                                handValue[currentPlayer] += parseValue(card);
+                                //if player busts, check for a soft hand and try to save the day
+                                if(handValue[currentPlayer] > 21)
+                                {
+                                    if(softHand[currentPlayer] == true)
+                                    {
+                                        handValue[currentPlayer] -= 10;
+                                        softHand[currentPlayer] = false;
+                                        if(handValue[currentPlayer] > 21)
+                                        {
+                                            System.out.println("BUST!");
+                                            playerStatus[currentPlayer] = 2;
+                                        }
+                                        else
+                                        {
+                                            System.out.print(" " + handValue[currentPlayer] + "\n");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        System.out.print(" " + handValue[currentPlayer] + "\n");
+                                        System.out.println("BUST!");
+                                        playerStatus[currentPlayer] = 2;
+                                    }
+                                }
+                                else
+                                {
+                                    
+                                    System.out.print(" " + handValue[currentPlayer] + "\n");
+                                }
+                                break;
+                            case "STAND":
+                                playerStatus[currentPlayer] = 1;
+                                break;
+                            default:
+                                System.out.println("Please enter a valid command");
+                        }
+                    }
+                    move.close();
+                }
+                currentPlayer++;
+            }
+            while(currentPlayer < numOfPlayers - 1);
 
             //DEBUG BLOCK
-            for(int i = 0; i < handValue.length; i++)
-            {
-                System.out.println(handValue[i]);
-            }
             gameIsOver = true;
             //end debug
         }
