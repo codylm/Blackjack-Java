@@ -20,7 +20,7 @@ public class App
             System.out.println(displayCard.getSuit() + " " + displayCard.getValue() + i);
         }*/
         
-        Blackjack blackjack = new Blackjack(2);
+        Blackjack blackjack = new Blackjack(3);
         blackjack.runGame();
     }
 }

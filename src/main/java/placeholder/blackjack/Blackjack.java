@@ -126,6 +126,9 @@ public class Blackjack
                 
                 continue;
             }
+
+            Scanner move = new Scanner(System.in); //had to pull this out of the loop entirely because of scope errors
+            
             //do-while is necessary for one player vs dealer setup
             do
             {
@@ -137,12 +140,11 @@ public class Blackjack
                 }
                 else
                 {
-                    Scanner move = new Scanner(System.in);
                     while(playerStatus[currentPlayer] == 0)
                     {
                         //Get player input
-                        System.out.print("Please enter HIT or STAND to indicate your move: ");
-                        String input = move.next();
+                        System.out.print("Player " + (currentPlayer + 1) + ", please enter HIT or STAND to indicate your move: ");
+                        String input = move.next(); //the program isn't liking this for some reason, says there's no such element
                         switch(input)
                         {
                             case "HIT":
@@ -189,12 +191,13 @@ public class Blackjack
                                 System.out.println("Please enter a valid command");
                         }
                     }
-                    move.close();
                 }
                 currentPlayer++;
             }
             while(currentPlayer < numOfPlayers - 1);
 
+            move.close(); //had to pull this out of the loop entirely because of scope errors
+            
             //DEBUG BLOCK
             gameIsOver = true;
             //end debug
